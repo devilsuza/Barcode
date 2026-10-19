@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <title>Freshmart Label Studio</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">F</div>
+        <div><strong>FRESHMART</strong><span>Label Studio</span></div>
+      </div>
+      <nav>
+        <a class="active" href="#searchPanel"><span>⌕</span> Product Search</a>
+        <a href="#labelPanel"><span>▣</span> Label Preview</a>
+        <button class="nav-setting" id="openSettingsNav"><span>⚙</span> Printer Settings</button>
+      </nav>
+      <div class="sidebar-note">
+        <span class="online-dot"></span>
+        <div><b>Portal Online</b><small>ZD410 Local Bridge ready</small></div>
+      </div>
+    </aside>
+
+    <div class="content">
+      <header class="topbar">
+        <div><p class="eyebrow">BARCODE OPERATIONS</p><h1>Zebra ZD410 Label Portal</h1><p>Search products, customize dates and print labels quantity-wise.</p></div>
+        <div class="printer-chip"><span class="pulse"></span><div><b>Bridge ID</b><small id="bridgeChip">STORE-ZD410-1</small></div></div>
+      </header>
+
+      <main>
+        <section class="search-card" id="searchPanel">
+          <div class="section-title"><div><span class="step">01</span><h2>Find a product</h2></div><span id="stats" class="data-count">Loading master...</span></div>
+          <div class="search-box"><span class="search-icon">⌕</span><input id="q" autofocus autocomplete="off" placeholder="Scan EAN or enter Product ID / Product Name"><button id="search">Search</button></div>
+          <div id="results" class="results"><div class="empty"><div>▦</div><b>Search your master article file</b><span>Results will appear here instantly.</span></div></div>
+        </section>
+
+        <section id="work" class="workspace hide">
+          <div class="left-column">
+            <section class="panel" id="printPanel">
+              <div class="section-title"><div><span class="step">02</span><h2>Product & print settings</h2></div><span class="selected-badge">SELECTED</span></div>
+              <div class="product-summary">
+                <div class="product-icon">▦</div>
+                <div><small>PRODUCT NAME</small><h3 id="summaryName">-</h3><div class="summary-meta"><span>ID: <b id="summaryId">-</b></span><span>EAN: <b id="summaryEan">-</b></span><span>UOM: <b id="summaryUom">-</b></span></div></div>
+              </div>
+              <input id="pid" type="hidden"><input id="ean" type="hidden"><input id="name" type="hidden"><input id="uom" type="hidden">
+
+              <div class="settings-grid">
+                <label><span>Bridge ID</span><input id="bridge" value="STORE-ZD410-1"></label>
+                <label><span>Print Quantity</span><div class="qty-control"><button type="button" id="qtyMinus">−</button><input id="qty" type="number" min="1" max="999" value="1"><button type="button" id="qtyPlus">+</button></div></label>
+              </div>
+
+              <div class="date-block">
+                <div class="toggle-row"><div><b>Production date line</b><small>Print EMB. or PRO. on the label</small></div><label class="switch"><input id="showProduction" type="checkbox" checked><span></span></label></div>
+                <div class="date-fields"><label><span>Date Type</span><select id="mt"><option>EMB.</option><option>PRO.</option></select></label><label><span>Production Date</span><input id="mfg" type="date"></label></div>
+              </div>
+
+              <div class="date-block">
+                <div class="toggle-row"><div><b>Validity date line</b><small>Print ATE., CON. or VAL. on the label</small></div><label class="switch"><input id="showValidity" type="checkbox" checked><span></span></label></div>
+                <div class="date-fields"><label><span>Validity Type</span><select id="et"><option>ATE.</option><option>CON.</option><option>VAL.</option></select></label><label><span>Validity Date</span><input id="exp" type="date"></label></div>
+              </div>
+
+              <div class="actions"><button id="print" class="primary"><span>▣</span> Send to Local Bridge</button><button id="browserPrint" class="secondary"><span>↗</span> Browser Print</button></div>
+              <div id="job" class="job-status"></div>
+            </section>
+          </div>
+
+          <aside class="preview-panel panel" id="labelPanel">
+            <div class="section-title"><div><span class="step">03</span><h2>Live preview</h2></div><button id="openSettings" class="adjust-btn">⚙ Adjust Label</button></div>
+            <div class="preview-stage">
+              <div class="label" id="printLabel">
+                <div id="ln" class="ln"></div>
+                <div class="dates"><b id="productionLine"><span id="lmt">EMB.</span> <span id="lm">(Date)</span></b><b id="validityLine"><span id="let">ATE.</span> <span id="le">(Date)</span></b></div>
+                <svg id="barcode"></svg>
+                <div id="lean"></div>
+              </div>
+            </div>
+            <div class="preview-info"><span><b>203</b> DPI</span><span><b>3 mm</b> Side margin</span><span><b>Code 128</b> Format</span></div>
+          </aside>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal hide" aria-hidden="true">
+    <div class="modal-backdrop" id="closeSettingsBackdrop"></div>
+    <section class="settings-modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="modal-head"><div><p class="eyebrow">MANUAL LABEL CONTROL</p><h2 id="settingsTitle">Printer & Label Settings</h2><small>Changes update the preview immediately. Save to use the same layout for every new ticket.</small></div><button id="closeSettings" class="close-btn">×</button></div>
+      <div class="settings-scroll">
+        <div class="setting-section"><h3>Label size</h3><div class="manual-grid">
+          <label><span>Width (mm)</span><input id="setWidthMm" type="number" min="25" max="104" step="0.1"></label>
+          <label><span>Height (mm)</span><input id="setHeightMm" type="number" min="20" max="150" step="0.1"></label>
+          <label><span>Horizontal offset (dots)</span><input id="setOffsetX" type="number" min="-100" max="100"></label>
+          <label><span>Vertical offset (dots)</span><input id="setOffsetY" type="number" min="-100" max="100"></label>
+        </div></div>
+        <div class="setting-section"><h3>Product name</h3><div class="manual-grid">
+          <label><span>Left position (dots)</span><input id="setNameX" type="number" min="0" max="800"></label>
+          <label><span>Top position (dots)</span><input id="setNameY" type="number" min="0" max="1200"></label>
+          <label><span>Font size (dots)</span><input id="setNameFont" type="number" min="12" max="70"></label>
+          <label><span>Text width (dots)</span><input id="setNameWidth" type="number" min="80" max="1000"></label>
+        </div></div>
+        <div class="setting-section"><h3>Date lines</h3><div class="manual-grid">
+          <label><span>Date left (dots)</span><input id="setDateX" type="number" min="0" max="800"></label>
+          <label><span>First date top (dots)</span><input id="setDateY" type="number" min="0" max="1200"></label>
+          <label><span>Date font (dots)</span><input id="setDateFont" type="number" min="12" max="60"></label>
+          <label><span>Line gap (dots)</span><input id="setDateGap" type="number" min="12" max="100"></label>
+        </div></div>
+        <div class="setting-section"><h3>Barcode</h3><div class="manual-grid">
+          <label><span>Left position (dots)</span><input id="setBarcodeX" type="number" min="0" max="800"></label>
+          <label><span>Top position (dots)</span><input id="setBarcodeY" type="number" min="0" max="1200"></label>
+          <label><span>Height (dots)</span><input id="setBarcodeHeight" type="number" min="40" max="500"></label>
+          <label><span>Bar width/module (1-4)</span><input id="setModule" type="number" min="1" max="4"></label>
+          <label><span>Number top (dots)</span><input id="setCodeY" type="number" min="0" max="1200"></label>
+          <label><span>Number font (dots)</span><input id="setCodeFont" type="number" min="16" max="80"></label>
+        </div></div>
+      </div>
+      <div class="modal-actions"><button id="resetSettings" class="danger-soft">Reset Default</button><div><button id="cancelSettings" class="secondary">Cancel</button><button id="saveSettings" class="primary">Save Printer Settings</button></div></div>
+    </section>
+  </div>
+  <div id="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
